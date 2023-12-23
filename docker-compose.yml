@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  server:
+    container_name: springboot-container
+    build: .
+    restart: always
+    image: rogers2023/dockertestdec:1.0.4
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      RDS_HOSTNAME: mysql
+      RDS_PORT: 3306
+      RDS_DB_NAME: todos
+      RDS_USERNAME: todo-user
+      RDS_PASSWORD: dummytodos
+    networks:
+      - todonetwork
+
+  mysql:
+    container_name: mysqlcontainer
+    image: mysql:5.7
+    volumes:
+      - D:/docker2:/docker-entrypoint-initdb.d
+      - ./my.cnf:/etc/mysql/my.cnf
+    environment:
+      MYSQL_DATABASE: todos
+      MYSQL_USER: todo-user
+      MYSQL_ROOT_PASSWORD: dummypassword
+      MYSQL_PASSWORD: dummytools
+    networks:
+      - todonetwork
+    ports:
+      - "3308:3306"
+
+networks:
+  todonetwork:
